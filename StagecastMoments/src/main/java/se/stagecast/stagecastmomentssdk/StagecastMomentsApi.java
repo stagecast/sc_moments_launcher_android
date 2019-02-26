@@ -2,6 +2,7 @@ package se.stagecast.stagecastmomentssdk;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.support.annotation.NonNull;
@@ -14,6 +15,7 @@ import java.lang.ref.WeakReference;
 public class StagecastMomentsApi {
     private static StagecastMomentsApi instance;
     private WeakReference<Activity> activityReference; // do not leak memory
+    private Bundle bundleToPassToReact;
 
     private StagecastMomentsApi() {
     }
@@ -25,8 +27,15 @@ public class StagecastMomentsApi {
         return instance;
     }
 
-    public static final String EVENT_ID_KEY = "EVENT_ID_PASS";
+    public static final String EVENT_ID_PROP = "event";
 
+    public void setBundleToPassToReact(Bundle bundleToPassToReact) {
+        this.bundleToPassToReact = bundleToPassToReact;
+    }
+
+    public Bundle getBundleToPassToReact() {
+        return bundleToPassToReact;
+    }
 
     public ReactInstanceManager getReactInstanceManager() {
         return reactInstanceManager;
@@ -39,7 +48,7 @@ public class StagecastMomentsApi {
     private ReactInstanceManager reactInstanceManager;
 
 
-    public void startReactApp(Activity activity, @NonNull ReactInstanceManager reactInstanceManager, String eventID) {
+    public void startReactApp(Activity activity, @NonNull ReactInstanceManager reactInstanceManager, Bundle bundle) {
 
         setReactInstanceManager(reactInstanceManager);
 
@@ -48,7 +57,7 @@ public class StagecastMomentsApi {
             return;
         }
         Intent intent = new Intent(activity, StagecastMomentsActivity.class);
-        intent.putExtra(EVENT_ID_KEY, eventID);
+        this.bundleToPassToReact = bundle;
         activity.startActivity(intent);
 
         // Send Events to React Native after 5 seconds of starting React app.

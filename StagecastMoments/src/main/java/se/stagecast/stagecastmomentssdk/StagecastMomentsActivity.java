@@ -7,7 +7,7 @@ import com.facebook.react.ReactInstanceManager;
 import com.facebook.react.ReactRootView;
 import com.facebook.react.modules.core.DefaultHardwareBackBtnHandler;
 
-public class StagecastMomentsActivity  extends Activity implements DefaultHardwareBackBtnHandler {
+public class StagecastMomentsActivity extends Activity implements DefaultHardwareBackBtnHandler {
     private ReactRootView mReactRootView;
     private ReactInstanceManager mReactInstanceManager;
 
@@ -18,15 +18,13 @@ public class StagecastMomentsActivity  extends Activity implements DefaultHardwa
 
         mReactInstanceManager = StagecastMomentsApi.getInstance().getReactInstanceManager();
 
-        if(mReactInstanceManager == null)
+        if (mReactInstanceManager == null)
             throw new IllegalStateException(getString(R.string.exception_react_instance_manager_null));
 
-        Bundle bundle = new Bundle();
+        Bundle bundle = StagecastMomentsApi.getInstance().getBundleToPassToReact();
 
-        String eventID = getIntent().getStringExtra(StagecastMomentsApi.EVENT_ID_KEY);
-
-        if(eventID!=null && !"".equals(eventID))
-            bundle.putString(StagecastMomentsApi.EVENT_ID_KEY,eventID);
+        if (bundle == null)
+            bundle = new Bundle();
 
         // The string here (e.g. "StagecastMoments") has to match
         // the string in AppRegistry.registerComponent() in index.js
